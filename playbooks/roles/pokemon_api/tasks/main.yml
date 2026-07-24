@@ -1,0 +1,25 @@
+---
+- name: Obtener datos del Pokemon ({{ pokemon_name }})
+  ansible.builtin.uri:
+    url: "https://pokeapi.co/api/v2/pokemon/{{ pokemon_name | lower }}"
+    method: GET
+    return_content: yes
+    status_code: 200
+    validate_certs: false
+  register: _pokemon_response
+
+- name: Extraer habilidades usando filtros estándar (sin community.general)
+  ansible.builtin.set_fact:
+    pokemon_abilities: "{{ _pokemon_response.json.abilities | map(attribute='ability.name') | list }}"
+    pokemon_base_experience: "{{ _pokemon_response.json.base_experience }}"
+
+# - name: Mostrar informacion del Pokemon
+#   ansible.builtin.debug:
+#     var: _pokemon_response
+
+- name: Mostrar informacion del Pokemon
+  ansible.builtin.debug:
+    msg:
+      - "El Pokemon es: {{ pokemon_name | capitalize }}"
+      - "Experiencia Base: {{ pokemon_base_experience }}"
+      - "Habilidades: {{ pokemon_abilities | join(', ') }}"

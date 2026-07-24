@@ -1,0 +1,16 @@
+###
+# ansible-playbook playbooks/02_pokemon_api.yml
+# ansible-navigator run playbooks/02_pokemon_api.yml --pae false --mode stdout --eei quay.io/vifernan/ee-community
+###
+---
+- name: Playbook 2 - Ejecutar Rol de Pokemon API
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  # Sobrescribimos la variable por defecto
+  vars:
+    pokemon_name: "pikachu"
+
+  roles:
+    - role: pokemon_api
